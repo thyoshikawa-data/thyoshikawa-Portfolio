@@ -3,27 +3,85 @@
 <head>
     <title>Dashboard Banco Digital</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        .card {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 10px;
+            width: 200px;
+        }
+
+        canvas {
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>📊 Evolução da Taxa SELIC</h1>
+<h1>📊 Dashboard - Banco Digital</h1>
 
-<canvas id="chart" width="800" height="400"></canvas>
+<div class="card">
+    <h3>📈 Média Atual</h3>
+    <p id="media"></p>
+</div>
+
+<div class="card">
+    <h3>📉 Mínimo</h3>
+    <p id="min"></p>
+</div>
+
+<div class="card">
+    <h3>📊 Máximo</h3>
+    <p id="max"></p>
+</div>
+
+<canvas id="chart" width="900" height="400"></canvas>
 
 <script>
 fetch('data.csv')
     .then(response => response.text())
     .then(csv => {
+
         const rows = csv.split('\n').slice(1);
 
         const labels = [];
         const values = [];
+        let min = Infinity;
+        let max = -Infinity;
 
         rows.forEach(row => {
             const cols = row.split(',');
-            labels.push(cols[0]);
-            values.push(parseFloat(cols[1]));
+
+            const mes = cols[0];
+            const media = parseFloat(cols[1]);
+            const minVal = parseFloat(cols[2]);
+            const maxVal = parseFloat(cols[3]);
+
+            if (!mes) return;
+
+            labels.push(mes);
+            values.push(media);
+
+            if (minVal < min) min = minVal;
+            if (maxVal > max) max = maxVal;
         });
+
+        document.getElementById('media').innerText = values[values.length - 1];
+        document.getElementById('min').innerText = min;
+        document.getElementById('max').innerText = max;
 
         new Chart(document.getElementById('chart'), {
             type: 'line',
@@ -35,6 +93,7 @@ fetch('data.csv')
                 }]
             }
         });
+
     });
 </script>
 
