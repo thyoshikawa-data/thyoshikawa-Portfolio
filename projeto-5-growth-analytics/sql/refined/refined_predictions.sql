@@ -1,0 +1,11 @@
+CREATE TABLE REFINED_PREDICTIONS AS
+SELECT 
+    fk_contact,
+
+    ROUND(DBMS_RANDOM.VALUE(0.3, 0.95), 2) AS prob_compra_7d,
+    ROUND(DBMS_RANDOM.VALUE(0.5, 0.99), 2) AS prob_compra_30d,
+
+    route_dep AS rota_prevista
+
+FROM TRUSTED_TRANSACTIONS
+WHERE ROWNUM <= 1000;
