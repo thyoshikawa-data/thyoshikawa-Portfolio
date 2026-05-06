@@ -7,7 +7,7 @@ import time
 # CONFIG
 # ==========================================
 
-SERPAPI_KEY = "SUA_API_KEY"
+SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
 DATE_RANGE = "today 12-m"
 GEO = "BR"
